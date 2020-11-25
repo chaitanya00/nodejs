@@ -37,16 +37,16 @@ jobs:
     - run: npm install
     - name: Generate deployment package
       run: zip -r deploy.zip . -x '*.git*' 
-    - name: Deploy to EB
-      env:
-        TAG_NAME: app-${{ steps.date.outputs.date }} 
+    - name: Deploy to EB 
       uses: einaregilsson/beanstalk-deploy@v14
+      env:
+        R_TIME: "${{ steps.current-time.outputs.ISOTime }}"
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: Marketplace
         environment_name: Marketplace-env
-        version_label: demo
+        version_label: app-R_TIME
         region: us-east-1
         deployment_package: deploy.zip    
         
