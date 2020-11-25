@@ -25,10 +25,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
-    - name: Generate deployment package
-      uses: montudor/action-zip@v0.1.1
+    - uses: montudor/action-zip@v0.1.1
       with: 
-        args: zip -r ./artifacts/deploy.zip . -x '*.git*'  
+        args: zip -r deploy.zip . -x '*.git*' 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: deploy.zip
+    - uses: actions/checkout@v1
+    - uses: actions/download-artifact@v2
+      with:
+        name: deploy.zip         
     - uses: jakejarvis/s3-sync-action@v0.5.0
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET }}
@@ -36,5 +42,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'us-east-1'
         DEST_DIR: 'marketplace/production'
-        SOURCE_DIR: './artifacts'
         
