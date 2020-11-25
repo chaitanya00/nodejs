@@ -21,10 +21,7 @@ jobs:
     steps:
     - name: Set current date as env variable
       id: date
-      run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-    - name: Test with environment variables 
-      env:
-        TAG_NAME: ${{ steps.date.outputs.date }}  
+      run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV  
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -40,7 +37,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: Marketplace
         environment_name: Marketplace-env
-        version_label: app-$TAG_NAME 
+        version_label: app-${{ steps.date.outputs.date }} 
         region: us-east-1
         deployment_package: deploy.zip    
         
