@@ -28,7 +28,7 @@ jobs:
     - name: Generate deployment package
       run: zip -r deploy.zip . -x '*.git*'
     - uses: actions/checkout@master  
-    - uses: shallwefootball/s3-upload-action@master
+    - uses: jakejarvis/s3-sync-action@v0.5.0
       with:
         aws_key_id: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
