@@ -19,13 +19,20 @@ jobs:
         node-version: [12.16.1]
 
     steps:
-    - name: Set current date as env variable
-      id: date
-      run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-    - name: Test with environment variables
-      run: echo $TAG_NAME
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYYMMDD-HH
+        utcOffset: "+08:00"
+    - name: Use current time
       env:
-        TAG_NAME: app-${{ steps.date.outputs.date }}    
+        TIME: "${{ steps.current-time.outputs.time }}"
+        R_TIME: "${{ steps.current-time.outputs.readableTime }}"
+        F_TIME: "${{ steps.current-time.outputs.formattedTime }}"
+        YEAR: "${{ steps.current-time.outputs.year }}"
+        DAY: "${{ steps.current-time.outputs.day }}"
+      run: echo $TIME $R_TIME $F_TIME $YEAR $DAY   
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -43,7 +50,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: Marketplace
         environment_name: Marketplace-env
-        version_label: $TAG_NAME
+        version_label: demo
         region: us-east-1
         deployment_package: deploy.zip    
         
