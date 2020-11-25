@@ -25,9 +25,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
-    - uses: montudor/action-zip@v0.1.1
-      with: 
-        args: zip -r deploy.zip . -x '*.git*' 
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x '*.git*' 
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v14
       with:
