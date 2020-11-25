@@ -36,7 +36,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - name: Generate deployment package
-      run: zip -r deploy.zip . -x '*.git*' 
+      run: zip -r "deploy.zip-app-${{ github.sha }}-${{ steps.current-time.outputs.ISOTime }}" . -x '*.git*' 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -44,12 +44,12 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
     - name: Upload package to S3 bucket
-      run: aws s3 cp deploy.zip s3://elasticbeanstalk-us-east-1-990533311070/Marketplace/production/
+      run: aws s3 cp "deploy.zip-app-${{ github.sha }}-${{ steps.current-time.outputs.ISOTime }}" s3://elasticbeanstalk-us-east-1-990533311070/Marketplace/production/
     - name: Create new ElasticBeanstalk Application Version
       run: |
         aws elasticbeanstalk create-application-version \
         --application-name Marketplace \
-        --source-bundle S3Bucket="elasticbeanstalk-us-east-1-990533311070",S3Key="Marketplace/production/deploy.zip" \
-        --version-label "app-${{ github.sha }}"
+        --source-bundle S3Bucket="elasticbeanstalk-us-east-1-990533311070",S3Key="Marketplace/production/deploy.zip-app-${{ github.sha }}-${{ steps.current-time.outputs.ISOTime }}" \
+        --version-label "app-${{ github.sha }}-${{ steps.current-time.outputs.ISOTime }}"
     - name: Deploy new ElasticBeanstalk Application Version
-      run: aws elasticbeanstalk update-environment --environment-name Marketplace-env --version-label "app-${{ github.sha }}"     
+      run: aws elasticbeanstalk update-environment --environment-name Marketplace-env --version-label "app-${{ github.sha }}-${{ steps.current-time.outputs.ISOTime }}"     
