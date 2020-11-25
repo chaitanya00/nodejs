@@ -24,10 +24,10 @@ jobs:
       id: current-time
       with:
         format: YYYYMMDD-HH
-        utcOffset: "+08:00"
+        utcOffset: "+05:30"
     - name: Use current time
       env:
-        R_TIME: "${{ steps.current-time.outputs.readableTime }}"
+        R_TIME: "${{ steps.current-time.outputs.ISOTime }}"
       run: echo $R_TIME  
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
