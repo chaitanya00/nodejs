@@ -2,9 +2,9 @@ name: Jekyll site CI
 
 on:
   push:
-    branches: [ chaitanya00-patch-4 ]
+    branches: [ chaitanya00-patch-13 ]
   pull_request:
-    branches: [ chaitanya00-patch-4 ]
+    branches: [ chaitanya00-patch-13 ]
 
 jobs:
   build:
