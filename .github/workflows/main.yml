@@ -21,7 +21,11 @@ jobs:
     steps:
     - name: Set current date as env variable
       id: date
-      run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV  
+      run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Test with environment variables
+      run: echo $TAG_NAME
+      env:
+        TAG_NAME: app-${{ steps.date.outputs.date }}    
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -31,13 +35,15 @@ jobs:
     - name: Generate deployment package
       run: zip -r deploy.zip . -x '*.git*' 
     - name: Deploy to EB
+      env:
+        TAG_NAME: app-${{ steps.date.outputs.date }} 
       uses: einaregilsson/beanstalk-deploy@v14
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: Marketplace
         environment_name: Marketplace-env
-        version_label: app-${{ steps.date.outputs.date }} 
+        version_label: $TAG_NAME
         region: us-east-1
         deployment_package: deploy.zip    
         
