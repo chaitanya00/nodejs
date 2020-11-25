@@ -27,12 +27,13 @@ jobs:
         utcOffset: "+08:00"
     - name: Use current time
       env:
+        TIME: "${{ steps.current-time.outputs.time }}"
         F_TIME: "${{ steps.current-time.outputs.formattedTime }}"
         HOUR: "${{ steps.current-time.outputs.hour }}"
         MINUTE: "${{ steps.current-time.outputs.minute }}"
         SECOND: "${{ steps.current-time.outputs.second }}"
         MILLISECOND: "${{ steps.current-time.outputs.millisecind }}"
-      run: echo $F_TIME $HOUR $MINUTE $SECOND $MILLISECOND  
+      run: echo $TIME $F_TIME $HOUR $MINUTE $SECOND $MILLISECOND  
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
