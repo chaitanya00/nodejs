@@ -1,0 +1,26 @@
+name: Jekyll site CI
+
+on:
+  push:
+    branches: [ chaitanya00-patch-4 ]
+  pull_request:
+    branches: [ chaitanya00-patch-4 ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/upload-artifact@v2
+      with:
+        name: demo.txt
+        path: demo.txt
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: demo.txt
+ 
+
+    
